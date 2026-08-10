@@ -8,8 +8,7 @@ import Unit.Unit;
 public class BoardInput extends InputAdapter{
 
 	private Board board;
-	private Unit unit_selected;
-	private Cell cell_selected;
+	private Unit unit_selected;//hacer lo mismo con las unidades en el tema de la seleccion
 	
 	private int pos_x, pos_y;
 	
@@ -33,8 +32,7 @@ public class BoardInput extends InputAdapter{
 			return true;
 		}
 		
-		cell_selected = board.getCellClicked(pos_x, pos_y);
-		if(cell_selected!=null) cell_selected.setSelected(true);
+		board.setCellSelected(board.getCellClicked(pos_x, pos_y));
 
 		return true;
 	}

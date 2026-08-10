@@ -10,6 +10,8 @@ public class Board {
 	private Cell[][] board;
 	private List<Unit> units = new ArrayList<>();
 	private int pos_x_board, pos_y_board,width_board,height_board;
+	
+	private Cell cell_selected;
 
 	public Board(int rows, int cols, int size_cell, int pos_x_board, int pos_y_board) {
 		super();
@@ -20,6 +22,28 @@ public class Board {
 		this.pos_y_board = pos_y_board;
 		
 		initBoard( pos_x_board,  pos_y_board, rows, cols, size_cell);
+	}
+	public void setCellSelected(Cell new_cell_selected) {
+		
+		if(new_cell_selected == null) return;
+		
+		if(cell_selected == null) {
+			cell_selected = new_cell_selected;
+			cell_selected.setSelected(true);
+			return;
+		}
+		
+		if(cell_selected.isSelected() && new_cell_selected == cell_selected) {
+			cell_selected.setSelected(false);
+			return;
+		}
+		
+		if(cell_selected.isSelected()) {
+			cell_selected.setSelected(false);
+		}
+		
+		cell_selected = new_cell_selected;
+		new_cell_selected.setSelected(true);
 	}
 
 	private void initBoard(int pos_x, int pos_y,int rows,int cols,int size_cell) {
