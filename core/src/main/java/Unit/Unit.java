@@ -6,7 +6,13 @@ public abstract class Unit {
 	protected int health=100,atack,armor,velocity;
 	protected String name;
 	protected Cell cell;
-	
+	protected boolean unit_selected = false;
+	public boolean isSelected() {
+		return unit_selected;
+	}
+	public void setUnitSelected(boolean new_state) {
+		this.unit_selected = new_state;
+	}
 	public boolean isAlive() {
 		return (health>0);
 	}

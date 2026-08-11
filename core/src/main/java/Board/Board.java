@@ -12,6 +12,7 @@ public class Board {
 	private int pos_x_board, pos_y_board,width_board,height_board;
 	
 	private Cell cell_selected;
+	private Unit unit_selected;
 
 	public Board(int rows, int cols, int size_cell, int pos_x_board, int pos_y_board) {
 		super();
@@ -23,9 +24,10 @@ public class Board {
 		
 		initBoard( pos_x_board,  pos_y_board, rows, cols, size_cell);
 	}
+
 	public void setCellSelected(Cell new_cell_selected) {
 		
-		if(new_cell_selected == null) return;
+		if(new_cell_selected == null) return ;
 		
 		if(cell_selected == null) {
 			cell_selected = new_cell_selected;

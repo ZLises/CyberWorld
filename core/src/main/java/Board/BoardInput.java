@@ -3,17 +3,19 @@ package Board;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 
+import Controllers.GameController;
 import Unit.Unit;
 
 public class BoardInput extends InputAdapter{
 
 	private Board board;
-	private Unit unit_selected;//hacer lo mismo con las unidades en el tema de la seleccion
 	
 	private int pos_x, pos_y;
+	private GameController game_controller;
 	
-	public BoardInput(Board board) {
+	public BoardInput(Board board, GameController game_controller) {
 		this.board = board;
+		this.game_controller = game_controller;
 	}
 	
 	@Override
@@ -31,10 +33,10 @@ public class BoardInput extends InputAdapter{
 				board.getPos_y_board() < pos_y && (board.getHeight_board()+board.getPos_y_board()) > pos_y) ) {
 			return true;
 		}
-		
-		board.setCellSelected(board.getCellClicked(pos_x, pos_y));
 
-		return true;
+		
+		game_controller.onCellCliked(board.getCellClicked(pos_x, pos_y));
+		return true; 
 	}
 	
 	

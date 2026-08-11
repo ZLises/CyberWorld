@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import Board.Board;
 import Board.BoardInput;
 import Board.BoardRenderer;
+import Controllers.GameController;
 import Turns.TurnsManager;
 import Turns.TurnsRenderer;
 import Unit.CyberBot;
@@ -37,12 +38,17 @@ public class GameScreen implements Screen{
 	private TurnsRenderer turns_renderer;
 	private List<Unit> all_units = new ArrayList<>();
 	
+	private GameController game_controller;
+	
 	public GameScreen() {
 		batch = ((Main) Gdx.app.getApplicationListener()).batch;
 		uiStage = new Stage(new ScreenViewport());
 		
 		board = new Board(7, 7, 64, 10, 10);
-		board_input = new BoardInput(board);
+		
+		game_controller = new GameController(board,turns_manager);
+		board_input = new BoardInput(board,game_controller);
+		
 		CyberBot alpa = new CyberBot.Builder().name("alpa").atack(30).velocity(100).armor(20).build();
 		CyberBot beta = new CyberBot.Builder().name("beta").atack(30).velocity(4).armor(20).build();
 		CyberBot omega = new CyberBot.Builder().name("omega").atack(30).velocity(30).armor(20).build();
@@ -85,7 +91,7 @@ public class GameScreen implements Screen{
 	}
 	
 	private void update() {
-		
+		game_controller.update();
 	}
 	
 	@Override
