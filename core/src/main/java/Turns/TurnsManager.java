@@ -3,27 +3,41 @@ package Turns;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.PriorityQueue;
 
 import Unit.Unit;
 
 public class TurnsManager {
 	private List<Unit> units = new ArrayList<>();
 	private List<Unit> turn_queue = new ArrayList<>();
+	private int index_turn = 0;
+	private Unit unit_turn;
 
 	public TurnsManager(List<Unit> units) {
 		this.units = units;
-		//buildQueue(units);
+		buildQueue(); //construye la cola de turnos
 	}
 	
-	public Unit getTurn() {
-		return turn_queue.remove(0);
+	public void nextTurn(){//obtiene el siguiente turno
+		unit_turn = turn_queue.get(index_turn);
+		
+		index_turn++;
 	}
-	public Unit getCurrentTurn() {
-		return turn_queue.get(0);
+	//tambien hay otro endqueue que es cuando los enemigos/aliados ya no estan en la lista end()
+	//osea en cada nextTurn hay que verificar si hay almenos un aliado o un enemigo en la lista para continuar si no termina
+	//la batalla
+	public boolean endQueue() { 
+		if(index_turn == turn_queue.size()) {
+			index_turn = 0;
+			return true;
+		}
+		return false;
 	}
 	
-	public void buildQueue() {
+	public Unit getUnitTurn() {//obtiene la unidad de turno
+		return unit_turn;
+	}
+	
+	public void buildQueue() {//sirve para actualizar la lista de unidades vivas y ponerlas en cola turno
 
 		turn_queue.clear();
 		for(Unit unit: units) {
@@ -31,9 +45,10 @@ public class TurnsManager {
 				turn_queue.add(unit);
 			}
 		}
+		
 		turn_queue.sort(Comparator.comparingDouble(Unit::getVelocity).reversed());
 	}
-	public List<Unit> getTurnQueue(){
+	public List<Unit> getTurnQueue(){//devuelve la cola de turnos
 		return turn_queue;
 	}
 	

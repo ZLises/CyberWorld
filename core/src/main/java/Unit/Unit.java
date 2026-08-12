@@ -1,5 +1,9 @@
 package Unit;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import Abilitys.Ability;
 import Board.Cell;
 
 public abstract class Unit {
@@ -7,6 +11,16 @@ public abstract class Unit {
 	protected String name;
 	protected Cell cell;
 	protected boolean unit_selected = false;
+	protected List<Ability> list_ability = new ArrayList<>();
+	
+	public List<Ability> getList_ability(){
+		return list_ability;
+	}
+	protected void addAbility(Ability ability) {
+		if(list_ability.size() > 3) return;
+		this.list_ability.add(ability);
+	}
+	
 	public boolean isSelected() {
 		return unit_selected;
 	}

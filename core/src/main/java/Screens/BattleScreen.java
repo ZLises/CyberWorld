@@ -4,21 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import Abilitys.AbilityUI;
 import Board.Board;
 import Board.BoardInput;
 import Board.BoardRenderer;
-import Controllers.GameController;
+import Controllers.BattleController;
 import Turns.TurnsManager;
-import Turns.TurnsRenderer;
+import Turns.TurnsUI;
 import Unit.CyberBot;
 import Unit.Unit;
 import main.CyberWorld.Main;
@@ -34,15 +38,20 @@ public class BattleScreen implements Screen{
 	private BoardInput board_input;
 	
 	private TurnsManager turns_manager;
-	private TurnsRenderer turns_renderer;
+	private TurnsUI turns_ui;
 	private List<Unit> all_units = new ArrayList<>();
 	
-	private GameController game_controller;
+	private BattleController batlle_controller;
 	
 	private CyberBot alpa = new CyberBot.Builder().name("alpa").atack(30).velocity(100).armor(20).build();
 	private CyberBot beta = new CyberBot.Builder().name("beta").atack(30).velocity(4).armor(20).build();
 	private CyberBot omega = new CyberBot.Builder().name("omega").atack(30).velocity(30).armor(20).build();
-	private CyberBot sili = new CyberBot.Builder().name("sili").atack(30).velocity(30).armor(20).build();
+	private CyberBot sili = new CyberBot.Builder().name("sili").atack(30).velocity(20).armor(20).build();
+	
+	private Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+	private TextButton button_confirm = new TextButton("Next Turn",skin);
+	
+	private AbilityUI ability_ui = new AbilityUI();
 	
 	public BattleScreen() {
 		
@@ -59,29 +68,56 @@ public class BattleScreen implements Screen{
 		all_units.add(beta);
 		all_units.add(omega);
 		all_units.add(sili);
+		
 		initTurns();
+		initButtonConfirm();
 		
-		game_controller = new GameController(board,turns_manager);
+		batlle_controller = new BattleController(board,turns_manager);
 		
-		board_input = new BoardInput(board,game_controller);
+		board_input = new BoardInput(board,batlle_controller);
 		board_renderer = new BoardRenderer(board);
+		
+		
 		
 		input_multiplexer.addProcessor(uiStage);
 		input_multiplexer.addProcessor(board_input);
 		
-		game_controller.initBattle();
+		batlle_controller.initNextTurn();
+		turns_ui.rendererTurns();
 		addTable();
 	}
+	private void initButtonConfirm() {
+		button_confirm.addListener(new ClickListener() {
+			public void clicked(InputEvent e,float x,float y) {
+				//if(turns_manager.getTurnQueue().isEmpty()) return;
+				//turns_manager.getTurn();
+				//turns_renderer.buildTurns();
+				
+				batlle_controller.initNextTurn();
+				//batlle_controller.ejectuarHabilidad();//mas adelante
+				turns_ui.updateTurnsLabel();
+				
+			}
+		} );
+		
+	}
+	
 	private void initTurns() {
 		  turns_manager = new TurnsManager(all_units);
-		  turns_renderer = new TurnsRenderer(turns_manager);
-		  turns_renderer.buildTurns();
+		  turns_ui = new TurnsUI(turns_manager);
+		  turns_ui.rendererTurns();
 	}
+	
 	private void addTable() {
 		Table table = new Table();
 		table.setFillParent(true);
-		table.setOrigin(0f,0f);
-		table.add(turns_renderer).right();
+		table.right().top();
+		//table.setOrigin(0f,0f);
+		table.add(turns_ui).right();
+		table.row();
+		table.add(ability_ui).right();
+		table.row();
+		table.add(button_confirm).width(120).height(40).padLeft(20);
 		table.setDebug(true);
 		uiStage.addActor(table);
 	}
@@ -91,7 +127,7 @@ public class BattleScreen implements Screen{
 	}
 	
 	private void update() {
-		game_controller.update();
+		batlle_controller.update();
 	}
 	
 	@Override

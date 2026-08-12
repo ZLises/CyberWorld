@@ -5,7 +5,7 @@ import Board.Cell;
 import Turns.TurnsManager;
 import Unit.Unit;
 
-public class GameController {
+public class BattleController {
 
 	private Board board;
 	private TurnsManager turn_manager;
@@ -15,13 +15,22 @@ public class GameController {
 	private Unit unit_selected;//unidad seleccionada que puede mostrar estadisticas
 	private Unit unit_turn;//unidad que puede mover y es el tope del turn manager
 	
-	public GameController(Board board, TurnsManager turn_manager) {
+	public BattleController(Board board, TurnsManager turn_manager) {
 		super();
 		this.board = board;
 		this.turn_manager = turn_manager;
 	}
-	public void initBattle() {
-		unit_turn = turn_manager.getCurrentTurn();
+	public void initNextTurn() {
+		clearUnitTurn();
+		
+		if(turn_manager.endQueue()) {
+			turn_manager.buildQueue();
+		}
+		
+		turn_manager.nextTurn();
+		
+		unit_turn = turn_manager.getUnitTurn();
+		
 		unit_selected = unit_turn;
 		cell_selected = unit_turn.getCell();
 		cell_selected.setSelected(true);
@@ -43,12 +52,17 @@ public class GameController {
 				cell_selected.setSelected(false);
 				cell_selected = cell_clicked;
 				cell_clicked.setSelected(true);
-				//unit_selected = cell_clicked.getUnit();
+				unit_selected = cell_clicked.getUnit();
 				unit_selected.setUnitSelected(true);
-				
+
 				break;
 			default:
 		}
+	}
+	private void clearUnitTurn() {
+		if(unit_turn != null) unit_turn.setUnitSelected(false);
+		if(cell_selected != null) cell_selected.setSelected(false);
+		
 	}
 	
 	public void update() {
@@ -79,5 +93,8 @@ public class GameController {
 	
 	public BattleState getBattle_state() {
 		return battle_state;
+	}
+	public void setBattle_state(BattleState battle_state) {
+		this.battle_state = battle_state;
 	}
 }

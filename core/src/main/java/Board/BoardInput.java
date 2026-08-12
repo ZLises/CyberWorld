@@ -3,7 +3,7 @@ package Board;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 
-import Controllers.GameController;
+import Controllers.BattleController;
 import Unit.Unit;
 
 public class BoardInput extends InputAdapter{
@@ -11,9 +11,9 @@ public class BoardInput extends InputAdapter{
 	private Board board;
 	
 	private int pos_x, pos_y;
-	private GameController game_controller;
+	private BattleController game_controller;
 	
-	public BoardInput(Board board, GameController game_controller) {
+	public BoardInput(Board board, BattleController game_controller) {
 		this.board = board;
 		this.game_controller = game_controller;
 	}
