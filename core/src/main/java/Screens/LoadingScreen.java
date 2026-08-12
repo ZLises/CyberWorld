@@ -21,7 +21,7 @@ public class LoadingScreen implements Screen{
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		 if (Assets.manager_asset.update()) {
-	            ScreenManager.getInstance().setScreen(new GameScreen());
+	            ScreenManager.getInstance().setScreen(new BattleScreen());
 	            return;
 	     }
 	}

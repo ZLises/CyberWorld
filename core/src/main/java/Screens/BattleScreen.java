@@ -1,6 +1,5 @@
 package Screens;
 
-import java.awt.RenderingHints.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +23,13 @@ import Unit.CyberBot;
 import Unit.Unit;
 import main.CyberWorld.Main;
 
-public class GameScreen implements Screen{
+public class BattleScreen implements Screen{
 	private SpriteBatch batch;
 	private Stage uiStage;
 	
 	private InputMultiplexer input_multiplexer = new InputMultiplexer();
 	
-	private Board board;
+	private Board board = new Board(7, 7, 64, 10, 10);;
 	private BoardRenderer board_renderer;
 	private BoardInput board_input;
 	
@@ -40,36 +39,37 @@ public class GameScreen implements Screen{
 	
 	private GameController game_controller;
 	
-	public GameScreen() {
+	private CyberBot alpa = new CyberBot.Builder().name("alpa").atack(30).velocity(100).armor(20).build();
+	private CyberBot beta = new CyberBot.Builder().name("beta").atack(30).velocity(4).armor(20).build();
+	private CyberBot omega = new CyberBot.Builder().name("omega").atack(30).velocity(30).armor(20).build();
+	private CyberBot sili = new CyberBot.Builder().name("sili").atack(30).velocity(30).armor(20).build();
+	
+	public BattleScreen() {
+		
 		batch = ((Main) Gdx.app.getApplicationListener()).batch;
 		uiStage = new Stage(new ScreenViewport());
-		
-		board = new Board(7, 7, 64, 10, 10);
-		
-		game_controller = new GameController(board,turns_manager);
-		board_input = new BoardInput(board,game_controller);
-		
-		CyberBot alpa = new CyberBot.Builder().name("alpa").atack(30).velocity(100).armor(20).build();
-		CyberBot beta = new CyberBot.Builder().name("beta").atack(30).velocity(4).armor(20).build();
-		CyberBot omega = new CyberBot.Builder().name("omega").atack(30).velocity(30).armor(20).build();
-		CyberBot sili = new CyberBot.Builder().name("sili").atack(30).velocity(30).armor(20).build();
-		
-		input_multiplexer.addProcessor(uiStage);
-		input_multiplexer.addProcessor(board_input);
-		
-		all_units.add(alpa);
-		all_units.add(beta);
-		all_units.add(omega);
-		all_units.add(sili);
-		
-		board_renderer = new BoardRenderer(board);
 		
 		board.addUnit(alpa, 6, 6);
 		board.addUnit(beta, 2, 4);
 		board.addUnit(omega, 0, 0);
 		board.addUnit(sili, 2, 1);
-		//board.moveUnit(alpa, 3, 3);
+		board.moveUnit(alpa, 3, 3);
+		
+		all_units.add(alpa);
+		all_units.add(beta);
+		all_units.add(omega);
+		all_units.add(sili);
 		initTurns();
+		
+		game_controller = new GameController(board,turns_manager);
+		
+		board_input = new BoardInput(board,game_controller);
+		board_renderer = new BoardRenderer(board);
+		
+		input_multiplexer.addProcessor(uiStage);
+		input_multiplexer.addProcessor(board_input);
+		
+		game_controller.initBattle();
 		addTable();
 	}
 	private void initTurns() {
@@ -115,11 +115,13 @@ public class GameScreen implements Screen{
 		
 		uiStage.act();
 		uiStage.draw();
+		/*
 		if(Gdx.input.isKeyPressed(Input.Keys.C)) {
 			if(turns_manager.getTurnQueue().isEmpty()) return;
 			turns_manager.getTurn();
 			turns_renderer.buildTurns();
 		}
+		*/
 	}
 
 	@Override
