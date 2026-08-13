@@ -7,6 +7,7 @@ public class Cell {
 	private boolean occuiped = false;
 	private Unit unit;
 	private boolean selected = false;
+	private CellState cell_state = CellState.NORMAL;
     
 	private int pos_x_cell, pos_y_cell,size_cell;
 
@@ -88,5 +89,13 @@ public class Cell {
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	public CellState getCell_state() {
+		return cell_state;
+	}
+
+	public void setCell_state(CellState cell_state) {
+		this.cell_state = cell_state;
 	}
 }

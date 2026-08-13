@@ -16,7 +16,7 @@ public abstract class Unit {
 	public List<Ability> getList_ability(){
 		return list_ability;
 	}
-	protected void addAbility(Ability ability) {
+	public void addAbility(Ability ability) {
 		if(list_ability.size() > 3) return;
 		this.list_ability.add(ability);
 	}

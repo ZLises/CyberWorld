@@ -14,13 +14,23 @@ public class AbilityUI extends Table{
 
 	public AbilityUI() {
 		super();
-		buildAbilityUI();
 	}
-	private void buildAbilityUI() {
+	public void buildAbilityUI(List<Ability> list_ability) {
+		Ability ability;
+		ContentAbility content;
+		this.clearChildren();
+		
 		for(int i=0;i<4;i++) {
-			ContentAbility content = new ContentAbility(120,30);
+			ability = null;
+			
+			if(list_ability != null && i < list_ability.size()) {
+				ability =list_ability.get(i);
+			}
+			
+			content = new ContentAbility( ability,120,30 );
+			
 			list_content_ability.add(content);
-			this.add(content.getLabel()).width(content.getWidthContent()).height(content.getHeightContent()).padRight(10);
+			this.add(content).width(content.getWidthContent()).height(content.getHeightContent()).padRight(10);
 		}
 	}
 	

@@ -24,6 +24,13 @@ public class Board {
 		
 		initBoard( pos_x_board,  pos_y_board, rows, cols, size_cell);
 	}
+	public void clearCellState() {
+		for(int i=0;i<rows;i++) {
+			for(int j=0;j<cols;j++) {
+				board[i][j].setCell_state(CellState.NORMAL);
+			}
+		}
+	}
 
 	public void setCellSelected(Cell new_cell_selected) {
 		

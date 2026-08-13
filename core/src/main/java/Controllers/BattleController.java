@@ -1,5 +1,6 @@
 package Controllers;
 
+import Abilitys.AbilityManager;
 import Board.Board;
 import Board.Cell;
 import Turns.TurnsManager;
@@ -67,6 +68,16 @@ public class BattleController {
 	
 	public void update() {
 		//aca solo iria pequeñas cosas o directamente la ia para tomar decisiones
+		if(AbilityManager.getAbilityInstance().getAbility_selected() != null) {
+			battle_state = BattleState.HABILITY_SELECTED;
+		}else {
+			battle_state = BattleState.INIT_TURN;
+			board.clearCellState();
+		}
+		
+		if(battle_state == BattleState.HABILITY_SELECTED) {
+			AbilityManager.getAbilityInstance().getAbility_selected().cellsAbilitySelected(board,turn_manager.getUnitTurn());
+		}
 	}
 	
 	private boolean canMove(Cell cell_clicked) {
