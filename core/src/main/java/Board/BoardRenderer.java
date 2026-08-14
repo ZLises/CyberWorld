@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import Controllers.BattleController;
 import Unit.Unit;
 import Utils.Assets;
 
@@ -15,9 +16,11 @@ public class BoardRenderer {
 	private Cell cell_draw;
 	private Unit unit;
 	private BitmapFont bit_font = new BitmapFont();
+	private BattleController battle_controller;
 	
-	public BoardRenderer(Board board) {
+	public BoardRenderer(Board board, BattleController battle_controller) {
 		this.board = board;
+		this.battle_controller = battle_controller;
 		
 		img_cell = Assets.manager_asset.get("images/img_cell.png",Texture.class);
 		img_cell_ability = Assets.manager_asset.get("images/img_cell_ability.png",Texture.class);

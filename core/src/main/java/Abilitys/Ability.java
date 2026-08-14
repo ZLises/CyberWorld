@@ -1,6 +1,10 @@
 package Abilitys;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Board.Board;
+import Board.Cell;
 import Unit.Unit;
 
 public abstract class Ability {
@@ -9,7 +13,10 @@ public abstract class Ability {
    
    public void execute(Board board, Unit unit) {}
    
-   public void cellsAbilitySelected(Board board, Unit unit) {}
+   public List<Cell> cellsAbilitySelected(Board board, Unit unit) {
+	   List<Cell> lista = new ArrayList<>();
+		return lista;
+   }
 
    public boolean isAbility_selected() {
 	return ability_selected;

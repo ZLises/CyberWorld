@@ -16,8 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import Abilitys.Ability;
-import Abilitys.AbilityManager;
 import Abilitys.AbilityUI;
 import Abilitys.SetAbilitys.DamageLine;
 import Abilitys.SetAbilitys.HealthHeart;
@@ -25,7 +23,6 @@ import Board.Board;
 import Board.BoardInput;
 import Board.BoardRenderer;
 import Controllers.BattleController;
-import Controllers.BattleState;
 import Turns.TurnsManager;
 import Turns.TurnsUI;
 import Unit.CyberBot;
@@ -55,9 +52,9 @@ public class BattleScreen implements Screen{
 	//---------------------------------
 	private Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 	private TextButton button_confirm = new TextButton("Next Turn",skin);
-	private TextButton button_execute_ability = new TextButton("Execute",skin);
 	
-	private AbilityUI ability_ui = new AbilityUI();//esto inicializa con la habilidades del primero del turn manager
+	
+	private AbilityUI ability_ui;//esto inicializa con la habilidades del primero del turn manager
 	
 	public BattleScreen() {
 		
@@ -84,13 +81,12 @@ public class BattleScreen implements Screen{
 		
 		initTurns();
 		initButtonConfirm();
-		initButtonExecute();
-		
 		
 		batlle_controller = new BattleController(board,turns_manager);
 		
 		board_input = new BoardInput(board,batlle_controller);
-		board_renderer = new BoardRenderer(board);
+		board_renderer = new BoardRenderer(board,batlle_controller);
+		ability_ui = new AbilityUI(batlle_controller);
 		
 		input_multiplexer.addProcessor(uiStage);
 		input_multiplexer.addProcessor(board_input);
@@ -107,32 +103,12 @@ public class BattleScreen implements Screen{
 				//if(turns_manager.getTurnQueue().isEmpty()) return;
 				//turns_manager.getTurn();
 				//turns_renderer.buildTurns();
-				
 				batlle_controller.initNextTurn();
-				//batlle_controller.ejectuarHabilidad();//mas adelante
 				turns_ui.updateTurnsLabel();
 				ability_ui.buildAbilityUI(turns_manager.getUnitTurn().getList_ability());
 			}
 		} );
-		
-	}
-	private void initButtonExecute() {
-		//button_execute_ability.setDisabled(true);
-		button_execute_ability.addListener(new ClickListener() {
-			public void clicked(InputEvent e,float x,float y) {
-				//if(turns_manager.getTurnQueue().isEmpty()) return;
-				//turns_manager.getTurn();
-				//turns_renderer.buildTurns();
-				
-				//batlle_controller.initNextTurn();
-				//batlle_controller.ejectuarHabilidad();//mas adelante
-				//turns_ui.updateTurnsLabel();
-				//ability_ui.buildAbilityUI(turns_manager.getUnitTurn().getList_ability());
-				AbilityManager.getAbilityInstance().getAbility_selected().execute(board, turns_manager.getUnitTurn());
-				//System.out.println("execute");
-			}
-		} );
-		
+
 	}
 	
 	private void initTurns() {
@@ -145,13 +121,11 @@ public class BattleScreen implements Screen{
 		Table table = new Table();
 		table.setFillParent(true);
 		table.right().top();
-		//table.setOrigin(0f,0f);
 		table.add(turns_ui).right();
 		table.row();
 		table.add(ability_ui).right();
 		table.row();
 		table.add(button_confirm).width(120).height(40).padLeft(20).row();
-		table.add(button_execute_ability).width(120).height(40).padLeft(20);
 		table.setDebug(true);
 		uiStage.addActor(table);
 	}
@@ -162,11 +136,6 @@ public class BattleScreen implements Screen{
 	
 	private void update() {
 		batlle_controller.update();
-		if(batlle_controller.getBattle_state() == BattleState.HABILITY_SELECTED) {
-			button_execute_ability.setDisabled(false);
-		}else {
-			button_execute_ability.setDisabled(true);
-		}
 	}
 	
 	@Override

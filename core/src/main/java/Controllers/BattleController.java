@@ -1,8 +1,9 @@
 package Controllers;
 
-import Abilitys.AbilityManager;
+import Abilitys.Ability;
 import Board.Board;
 import Board.Cell;
+import Board.CellState;
 import Turns.TurnsManager;
 import Unit.Unit;
 
@@ -15,6 +16,7 @@ public class BattleController {
 	private Cell cell_selected;//celda seleccionada que puede contener unidades o es para mover unidades
 	private Unit unit_selected;//unidad seleccionada que puede mostrar estadisticas
 	private Unit unit_turn;//unidad que puede mover y es el tope del turn manager
+	private Ability ability_selected;
 	
 	public BattleController(Board board, TurnsManager turn_manager) {
 		super();
@@ -35,6 +37,27 @@ public class BattleController {
 		unit_selected = unit_turn;
 		cell_selected = unit_turn.getCell();
 		cell_selected.setSelected(true);
+	}
+	public void onAbilityClicked(Ability ability_clicked) {
+
+		if(ability_clicked == null) {
+			ability_selected = null; 
+			board.clearCellState();
+			return;
+		}
+		if(ability_clicked == ability_selected) {
+			ability_selected = null;
+			board.clearCellState();
+			battle_state = BattleState.INIT_TURN;
+			return;
+		}
+
+		battle_state = BattleState.HABILITY_SELECTED;
+		
+		for(Cell cell : ability_clicked.cellsAbilitySelected(board, unit_selected)) {
+			cell.setCell_state(CellState.ABILITY_SELECTED);
+		}
+		ability_selected = ability_clicked;
 	}
 	
 	public void onCellCliked(Cell cell_clicked) {
@@ -58,6 +81,7 @@ public class BattleController {
 
 				break;
 			default:
+				System.out.println("DEFAULT");
 		}
 	}
 	private void clearUnitTurn() {
@@ -68,16 +92,6 @@ public class BattleController {
 	
 	public void update() {
 		//aca solo iria pequeñas cosas o directamente la ia para tomar decisiones
-		if(AbilityManager.getAbilityInstance().getAbility_selected() != null) {
-			battle_state = BattleState.HABILITY_SELECTED;
-		}else {
-			battle_state = BattleState.INIT_TURN;
-			board.clearCellState();
-		}
-		
-		if(battle_state == BattleState.HABILITY_SELECTED) {
-			AbilityManager.getAbilityInstance().getAbility_selected().cellsAbilitySelected(board,turn_manager.getUnitTurn());
-		}
 	}
 	
 	private boolean canMove(Cell cell_clicked) {
@@ -107,5 +121,17 @@ public class BattleController {
 	}
 	public void setBattle_state(BattleState battle_state) {
 		this.battle_state = battle_state;
+	}
+	
+	public Ability getAbility_selected() {
+		return ability_selected;
+	}
+	
+	public void setAbility_selected(Ability ability_selected) {
+		this.ability_selected = ability_selected;
+	}
+	public void executeAbility() {
+		if(ability_selected == null) return;
+		ability_selected.execute(board, unit_selected);
 	}
 }
