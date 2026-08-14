@@ -1,5 +1,8 @@
 package Controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Abilitys.Ability;
 import Board.Board;
 import Board.Cell;
@@ -17,6 +20,7 @@ public class BattleController {
 	private Unit unit_selected;//unidad seleccionada que puede mostrar estadisticas
 	private Unit unit_turn;//unidad que puede mover y es el tope del turn manager
 	private Ability ability_selected;
+	private List<UnitSelectedListener> list_listener = new ArrayList<>();
 	
 	public BattleController(Board board, TurnsManager turn_manager) {
 		super();
@@ -34,9 +38,13 @@ public class BattleController {
 		
 		unit_turn = turn_manager.getUnitTurn();
 		
-		unit_selected = unit_turn;
+		//unit_selected = unit_turn;
+		setUnitSelect(unit_turn);
 		cell_selected = unit_turn.getCell();
 		cell_selected.setSelected(true);
+	}
+	public void addUnitSelectedListener(UnitSelectedListener unit_selected_listener) {
+		list_listener.add(unit_selected_listener);
 	}
 	public void onAbilityClicked(Ability ability_clicked) {
 
@@ -70,20 +78,31 @@ public class BattleController {
 				
 				if(cell_clicked.getUnit() != unit_selected) {
 						unit_selected.setUnitSelected(false);
-						unit_selected = cell_clicked.getUnit();
+						//unit_selected = cell_clicked.getUnit();
 						unit_selected.setUnitSelected(true);
+						setUnitSelect(cell_clicked.getUnit());
+						
 				}
 				cell_selected.setSelected(false);
 				cell_selected = cell_clicked;
 				cell_clicked.setSelected(true);
-				unit_selected = cell_clicked.getUnit();
 				unit_selected.setUnitSelected(true);
+				//unit_selected = cell_clicked.getUnit();
+				setUnitSelect(cell_clicked.getUnit());
 
 				break;
 			default:
 				System.out.println("DEFAULT");
 		}
 	}
+	public void setUnitSelect(Unit unit) {
+		this.unit_selected = unit;
+		
+		for(UnitSelectedListener listener: list_listener) {
+			listener.onUnitSelected(unit);
+		}
+	}
+	
 	private void clearUnitTurn() {
 		if(unit_turn != null) unit_turn.setUnitSelected(false);
 		if(cell_selected != null) cell_selected.setSelected(false);

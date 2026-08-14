@@ -14,11 +14,13 @@ public class ContentAbility extends Group{
 	private int width,height;
 	private Label label;
 	private Skin skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+	private Ability ability;
 	
 	public ContentAbility(Ability ability,int width, int height, BattleController battle_controller) {
 		super();
 		this.width = width;
 		this.height = height;
+		this.setAbility(ability);
 		
 		label = new Label( ( (ability==null)? "HABILIDAD" : ability.getName() ),skin);
 		label.setSize(width, height);
@@ -26,7 +28,7 @@ public class ContentAbility extends Group{
 		
 		this.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event,float x, float y,int pointer, int button) {
-				battle_controller.onAbilityClicked(ability);
+				battle_controller.onAbilityClicked(getAbility());
 			 return true;
 			}
 		});
@@ -50,6 +52,14 @@ public class ContentAbility extends Group{
 	
 	public void setLabel(String new_text) {
 		label.setText(new_text);
+	}
+
+	public Ability getAbility() {
+		return ability;
+	}
+
+	public void setAbility(Ability ability) {
+		this.ability = ability;
 	}
 
 }

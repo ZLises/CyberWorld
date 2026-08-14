@@ -1,12 +1,13 @@
 package Turns;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import Unit.Unit;
 
-public class TurnContentBlock{
+public class TurnContentBlock extends Group{
 
 	private Unit unit;
 	private int width,height;
@@ -23,6 +24,7 @@ public class TurnContentBlock{
 		
 		label = new Label("UNIT: " + unit.getName() + ( (turn == true) ? " TURNO" : "" ),skin);
 		label.setSize(width, height);
+		this.addActor(label);
 	}
 	
 	public void changeLabel(boolean new_state) {

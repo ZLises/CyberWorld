@@ -24,7 +24,7 @@ public class TurnsUI extends Table{
 		for(Unit unit : turns_manager.getTurnQueue()) {
 		   content_block = new TurnContentBlock(unit,120,40, ( unit==turns_manager.getUnitTurn()) );
 		   all_content.add(content_block);
-		   this.add(content_block.getLabel()).width(content_block.getWidthContent()).height(content_block.getHeightContent()).pad(5).row();
+		   this.add(content_block).width(content_block.getWidthContent()).height(content_block.getHeightContent()).pad(5).row();
 		}
 	}
 	public void updateTurnsLabel() {//por ahora label porque es una etiqueta mas adelante se va a llamar distinto

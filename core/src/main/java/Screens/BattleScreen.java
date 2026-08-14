@@ -93,7 +93,8 @@ public class BattleScreen implements Screen{
 		
 		batlle_controller.initNextTurn();
 		turns_ui.rendererTurns();
-		ability_ui.buildAbilityUI(turns_manager.getUnitTurn().getList_ability());
+		
+		
 		addTable();
 	}
 	
@@ -103,9 +104,11 @@ public class BattleScreen implements Screen{
 				//if(turns_manager.getTurnQueue().isEmpty()) return;
 				//turns_manager.getTurn();
 				//turns_renderer.buildTurns();
+				/*
 				batlle_controller.initNextTurn();
 				turns_ui.updateTurnsLabel();
 				ability_ui.buildAbilityUI(turns_manager.getUnitTurn().getList_ability());
+				*/
 			}
 		} );
 
