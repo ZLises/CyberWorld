@@ -3,6 +3,10 @@ package Abilitys;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import Board.Board;
 import Board.Cell;
 import Unit.Unit;
@@ -10,6 +14,8 @@ import Unit.Unit;
 public abstract class Ability {
    protected String name;
    private boolean ability_selected;
+   private float duration,elapsed;
+   private Animation<TextureRegion> animation;
    
    public void execute(Board board, Unit unit) {}
    
@@ -32,7 +38,36 @@ public abstract class Ability {
 
    public void setName(String name) {
 	this.name = name;
-   };
+   }
+
+   public float getDuration() {
+	return duration;
+   }
+
+   public void setDuration(float duration) {
+	this.duration = duration;
+   }
+
+   public Animation<TextureRegion> getAnimation() {
+	return animation;
+   }
+
+   public void setAnimation(Animation<TextureRegion> animation) {
+	this.animation = animation;
+   }
+
+   public abstract void update(float delta);
+
+   public abstract boolean isFinished();
+
+   public abstract void render(SpriteBatch batch, Unit unit_selected, Board board);
+
+   public float getElapsed() {
+	 return elapsed;
+   }
+
+   public void setElapsed(float elapsed) {
+     this.elapsed = elapsed;
+   }
 	   
-   
 }

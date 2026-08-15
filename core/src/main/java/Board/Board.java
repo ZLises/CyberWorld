@@ -119,8 +119,9 @@ public class Board {
 		return board[row][col];
 	}
 	
-	public Cell getCell(int pos_x, int pos_y) {
-		return board[pos_x][pos_y];
+	public Cell getCell(int row, int col) {
+		if(row < 0 || col < 0 || row >= rows || col >= cols) return null;
+		return board[row][col];
 	}
 	
 	public int getRows() {
@@ -177,6 +178,12 @@ public class Board {
 
 	public void setHeight_board(int height_board) {
 		this.height_board = height_board;
+	}
+	public Unit getUnit_selected() {
+		return unit_selected;
+	}
+	public void setUnit_selected(Unit unit_selected) {
+		this.unit_selected = unit_selected;
 	}
 	
 }

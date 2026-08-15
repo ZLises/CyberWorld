@@ -5,17 +5,21 @@ import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import Controllers.BattleController;
+import Controllers.NextTurnListener;
 import Unit.Unit;
 
-public class TurnsUI extends Table{
+public class TurnsUI extends Table implements NextTurnListener{
 
 	private TurnsManager turns_manager;
 	private TurnContentBlock content_block;
 	private List<TurnContentBlock> all_content = new ArrayList<>();
 	
-	public TurnsUI(TurnsManager turns_manager) {
+	public TurnsUI(TurnsManager turns_manager, BattleController battle_controller) {
 		this.turns_manager = turns_manager;
 
+		battle_controller.addNextTurnListener(this);
+		
 		this.setDebug(true);
 	}
 	
@@ -27,7 +31,7 @@ public class TurnsUI extends Table{
 		   this.add(content_block).width(content_block.getWidthContent()).height(content_block.getHeightContent()).pad(5).row();
 		}
 	}
-	public void updateTurnsLabel() {//por ahora label porque es una etiqueta mas adelante se va a llamar distinto
+	private void updateTurnsLabel() {//por ahora label porque es una etiqueta mas adelante se va a llamar distinto
 		for(TurnContentBlock content: all_content) {
 			if(content.getUnit() == turns_manager.getUnitTurn()) {
 				content.changeLabel(true);
@@ -35,5 +39,11 @@ public class TurnsUI extends Table{
 				content.changeLabel(false);
 			}
 		}
+	}
+
+	@Override
+	public void onUnitNextTurn(Unit unit) {
+		// TODO Auto-generated method stub
+		updateTurnsLabel();
 	}
 }

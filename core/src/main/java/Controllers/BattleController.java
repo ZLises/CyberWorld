@@ -20,7 +20,8 @@ public class BattleController {
 	private Unit unit_selected;//unidad seleccionada que puede mostrar estadisticas
 	private Unit unit_turn;//unidad que puede mover y es el tope del turn manager
 	private Ability ability_selected;
-	private List<UnitSelectedListener> list_listener = new ArrayList<>();
+	private List<UnitSelectedListener> list_unit_listener = new ArrayList<>();
+	private List<NextTurnListener> list_next_turn_listener = new ArrayList<>();
 	
 	public BattleController(Board board, TurnsManager turn_manager) {
 		super();
@@ -37,17 +38,28 @@ public class BattleController {
 		turn_manager.nextTurn();
 		
 		unit_turn = turn_manager.getUnitTurn();
-		
-		//unit_selected = unit_turn;
 		setUnitSelect(unit_turn);
 		cell_selected = unit_turn.getCell();
 		cell_selected.setSelected(true);
+		
+		
+		for(NextTurnListener listener :  list_next_turn_listener) {
+			listener.onUnitNextTurn(unit_turn);
+		}
+		
+		board.clearCellState();
+		
 	}
 	public void addUnitSelectedListener(UnitSelectedListener unit_selected_listener) {
-		list_listener.add(unit_selected_listener);
+		list_unit_listener.add(unit_selected_listener);
+	}
+	public void addNextTurnListener(NextTurnListener next_turn_listener) {
+		list_next_turn_listener.add(next_turn_listener);
 	}
 	public void onAbilityClicked(Ability ability_clicked) {
 
+		if(battle_state == BattleState.ANIMATING_ABILITY) return;
+		
 		if(ability_clicked == null) {
 			ability_selected = null; 
 			board.clearCellState();
@@ -60,7 +72,7 @@ public class BattleController {
 			return;
 		}
 
-		battle_state = BattleState.HABILITY_SELECTED;
+		battle_state = BattleState.SELECTED_ABILITY;
 		
 		for(Cell cell : ability_clicked.cellsAbilitySelected(board, unit_selected)) {
 			cell.setCell_state(CellState.ABILITY_SELECTED);
@@ -78,7 +90,6 @@ public class BattleController {
 				
 				if(cell_clicked.getUnit() != unit_selected) {
 						unit_selected.setUnitSelected(false);
-						//unit_selected = cell_clicked.getUnit();
 						unit_selected.setUnitSelected(true);
 						setUnitSelect(cell_clicked.getUnit());
 						
@@ -87,18 +98,16 @@ public class BattleController {
 				cell_selected = cell_clicked;
 				cell_clicked.setSelected(true);
 				unit_selected.setUnitSelected(true);
-				//unit_selected = cell_clicked.getUnit();
 				setUnitSelect(cell_clicked.getUnit());
 
 				break;
 			default:
-				System.out.println("DEFAULT");
 		}
 	}
 	public void setUnitSelect(Unit unit) {
 		this.unit_selected = unit;
 		
-		for(UnitSelectedListener listener: list_listener) {
+		for(UnitSelectedListener listener: list_unit_listener) {
 			listener.onUnitSelected(unit);
 		}
 	}
@@ -106,11 +115,22 @@ public class BattleController {
 	private void clearUnitTurn() {
 		if(unit_turn != null) unit_turn.setUnitSelected(false);
 		if(cell_selected != null) cell_selected.setSelected(false);
+		if(ability_selected != null) ability_selected = null;
 		
 	}
 	
-	public void update() {
+	public void update(float delta) {
 		//aca solo iria pequeñas cosas o directamente la ia para tomar decisiones
+		if(battle_state == BattleState.ANIMATING_ABILITY) {
+			ability_selected.update(delta);
+			if(ability_selected.isFinished()){
+				
+				ability_selected.execute(board, unit_selected);
+				initNextTurn();
+				battle_state = BattleState.INIT_TURN;
+				
+			}
+		}
 	}
 	
 	private boolean canMove(Cell cell_clicked) {
@@ -150,7 +170,10 @@ public class BattleController {
 		this.ability_selected = ability_selected;
 	}
 	public void executeAbility() {
-		if(ability_selected == null) return;
-		ability_selected.execute(board, unit_selected);
+		if(ability_selected == null || unit_selected != unit_turn) return;
+		
+		ability_selected.setDuration(ability_selected.getDuration());
+		
+		battle_state = BattleState.ANIMATING_ABILITY;
 	}
 }

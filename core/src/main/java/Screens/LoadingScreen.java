@@ -1,6 +1,7 @@
 package Screens;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import Utils.Assets;
 
@@ -14,6 +15,8 @@ public class LoadingScreen implements Screen{
 	public void show() {
 		// TODO Auto-generated method stub
 		Assets.manager_asset.load("images/img_cell.png", com.badlogic.gdx.graphics.Texture.class);
+		Assets.manager_asset.load("ability/rayo.atlas", TextureAtlas.class);
+		Assets.manager_asset.load("ability/health.atlas", TextureAtlas.class);
 		Assets.manager_asset.load("images/img_cell_ability.png", com.badlogic.gdx.graphics.Texture.class);
 		Assets.manager_asset.load("images/img_unit.png", com.badlogic.gdx.graphics.Texture.class);
 	}

@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 
 import Controllers.BattleController;
-import Unit.Unit;
-
 public class BoardInput extends InputAdapter{
 
 	private Board board;
